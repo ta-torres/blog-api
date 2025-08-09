@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import passport from "passport";
 import authRoutes from "./src/routes/authRoutes.js";
 import postRoutes from "./src/routes/postRoutes.js";
+import commentRoutes from "./src/routes/commentRoutes.js";
 import "./src/config/passport.js";
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(passport.initialize());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
