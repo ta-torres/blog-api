@@ -43,6 +43,20 @@ export const validateCreatePost = [
   handleValidationErrors,
 ];
 
+export const validateUpdatePost = [
+  body("title")
+    .optional()
+    .trim()
+    .isLength({ min: 3, max: 200 })
+    .withMessage("Title must be between 3 and 200 characters"),
+  body("content")
+    .optional()
+    .trim()
+    .isLength({ min: 10 })
+    .withMessage("Content must be at least 10 characters long"),
+  handleValidationErrors,
+];
+
 export const validateCreateComment = [
   body("content")
     .trim()

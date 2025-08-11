@@ -5,7 +5,10 @@ import {
   requireAuthor,
   optionalAuth,
 } from "../middleware/auth.js";
-import { validateCreatePost } from "../middleware/validation.js";
+import {
+  validateCreatePost,
+  validateUpdatePost,
+} from "../middleware/validation.js";
 
 const router = express.Router();
 
@@ -18,7 +21,19 @@ router.get(
 );
 router.get("/", postController.getPublishedPosts);
 router.get("/:id", optionalAuth, postController.getPost);
-
+router.put(
+  "/:id",
+  validateUpdatePost,
+  authenticateToken,
+  requireAuthor,
+  postController.updatePost,
+);
+router.put(
+  "/:id/publish",
+  authenticateToken,
+  requireAuthor,
+  postController.togglePublishStatus,
+);
 router.post(
   "/",
   validateCreatePost,
