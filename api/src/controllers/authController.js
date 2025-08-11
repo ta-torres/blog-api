@@ -36,7 +36,7 @@ export const signup = async (req, res) => {
         isAuthor: user.isAuthor,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "24h" },
     );
 
     res.status(201).json({
@@ -73,7 +73,7 @@ export const login = (req, res, next) => {
         isAuthor: user.isAuthor,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "24h" },
     );
 
     res.json({
