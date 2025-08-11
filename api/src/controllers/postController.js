@@ -68,10 +68,6 @@ export const createPost = async (req, res) => {
   try {
     const { title, content, published = false } = req.body;
 
-    if (!title || !content) {
-      return res.status(400).json({ error: "Title and content are required" });
-    }
-
     const post = await prisma.post.create({
       data: {
         title,
