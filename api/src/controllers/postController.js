@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // /api/posts
-export const getPublishedPosts = async (req, res) => {
+const getPublishedPosts = async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
       where: { published: true },
@@ -21,7 +21,7 @@ export const getPublishedPosts = async (req, res) => {
 
 // /api/posts/all
 // include unpublished
-export const getAllPosts = async (req, res) => {
+const getAllPosts = async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
       include: {
@@ -38,7 +38,7 @@ export const getAllPosts = async (req, res) => {
 
 // /api/posts/:id
 // only authors can see their own unpublished posts
-export const getPost = async (req, res) => {
+const getPost = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -64,7 +64,7 @@ export const getPost = async (req, res) => {
 };
 
 // /api/posts
-export const createPost = async (req, res) => {
+const createPost = async (req, res) => {
   try {
     const { title, content, published = false } = req.body;
 
@@ -112,3 +112,14 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ error: "Failed to delete post" });
   }
 };
+
+const postController = {
+  getPost,
+  getPublishedPosts,
+  getAllPosts,
+  getPost,
+  createPost,
+  deletePost,
+};
+
+export default postController;

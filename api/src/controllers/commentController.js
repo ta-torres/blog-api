@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 // /api/comments/post/:postId
 // show comments for published posts
-export const getPostComments = async (req, res) => {
+const getPostComments = async (req, res) => {
   try {
     const { postId } = req.params;
 
@@ -36,7 +36,7 @@ export const getPostComments = async (req, res) => {
 
 // /api/comments
 // only authenticated users can comment & only published posts can be commented
-export const createComment = async (req, res) => {
+const createComment = async (req, res) => {
   try {
     const { content, postId } = req.body;
 
@@ -77,7 +77,7 @@ export const createComment = async (req, res) => {
 
 // /api/comments/:id
 // author or comment owner can delete
-export const deleteComment = async (req, res) => {
+const deleteComment = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -102,3 +102,11 @@ export const deleteComment = async (req, res) => {
     res.status(500).json({ error: "Failed to delete comment" });
   }
 };
+
+const postController = {
+  getPostComments,
+  createComment,
+  deleteComment,
+};
+
+export default postController;

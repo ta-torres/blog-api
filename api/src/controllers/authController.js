@@ -5,7 +5,7 @@ import passport from "passport";
 
 const prisma = new PrismaClient();
 // create jwt token on signup login, author as false
-export const signup = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -54,7 +54,7 @@ export const signup = async (req, res) => {
   }
 };
 
-export const login = (req, res, next) => {
+const login = (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) {
       return res.status(500).json({ error: "Internal server error" });
@@ -88,7 +88,7 @@ export const login = (req, res, next) => {
   })(req, res, next);
 };
 
-export const getProfile = async (req, res) => {
+const getProfile = async (req, res) => {
   res.json({
     user: {
       id: req.user.id,
@@ -98,3 +98,11 @@ export const getProfile = async (req, res) => {
     },
   });
 };
+
+const authController = {
+  signup,
+  login,
+  getProfile,
+};
+
+export default authController;

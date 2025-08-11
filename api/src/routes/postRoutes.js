@@ -1,11 +1,5 @@
 import express from "express";
-import {
-  getPublishedPosts,
-  getAllPosts,
-  getPost,
-  createPost,
-  deletePost,
-} from "../controllers/postController.js";
+import postController from "../controllers/postController.js";
 import {
   authenticateToken,
   requireAuthor,
@@ -16,17 +10,27 @@ import { validateCreatePost } from "../middleware/validation.js";
 const router = express.Router();
 
 // author before getPublishedPosts
-router.get("/all", authenticateToken, requireAuthor, getAllPosts);
-router.get("/", getPublishedPosts);
-router.get("/:id", optionalAuth, getPost);
+router.get(
+  "/all",
+  authenticateToken,
+  requireAuthor,
+  postController.getAllPosts,
+);
+router.get("/", postController.getPublishedPosts);
+router.get("/:id", optionalAuth, postController.getPost);
 
 router.post(
   "/",
   validateCreatePost,
   authenticateToken,
   requireAuthor,
-  createPost,
+  postController.createPost,
 );
-router.delete("/:id", authenticateToken, requireAuthor, deletePost);
+router.delete(
+  "/:id",
+  authenticateToken,
+  requireAuthor,
+  postController.deletePost,
+);
 
 export default router;
