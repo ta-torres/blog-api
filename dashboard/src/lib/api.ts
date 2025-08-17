@@ -19,4 +19,23 @@ export const api = {
         headers: getAuthHeaders(),
       }),
   },
+
+  posts: {
+    getAll: () =>
+      fetch(`${API_BASE}/posts/all`, {
+        headers: getAuthHeaders(),
+      }),
+
+    getById: (id: string) =>
+      fetch(`${API_BASE}/posts/${id}`, {
+        headers: getAuthHeaders(),
+      }),
+
+    togglePublish: (id: string, published: boolean) =>
+      fetch(`${API_BASE}/posts/${id}`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ published }),
+      }),
+  },
 };

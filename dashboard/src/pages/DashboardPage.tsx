@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router";
 import Sidebar from "../components/Sidebar";
+import PostList from "../components/PostList";
 
 const DashboardPage = () => {
   return (
@@ -21,24 +22,7 @@ const DashboardPage = () => {
                 </div>
               }
             />
-            <Route
-              path="posts"
-              element={
-                <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
-                  <h2 className="mb-4 text-2xl font-bold text-gray-900">
-                    Posts
-                  </h2>
-                  <p className="text-gray-600">
-                    List of all publications from an author
-                  </p>
-                  <ul className="list-disc pl-6 text-gray-600">
-                    <li>Name, published status, modified date</li>
-                    <li>Button to toggle status and edit</li>
-                    <li>Click opens a preview</li>
-                  </ul>
-                </div>
-              }
-            />
+            <Route path="posts" element={<PostList />} />
             <Route
               path="posts/:id"
               element={
