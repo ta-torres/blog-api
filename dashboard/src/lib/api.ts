@@ -1,3 +1,5 @@
+import type { CreatePostData, UpdatePostData } from "../types/index";
+
 const API_BASE = "http://localhost:8000/api";
 
 const getAuthHeaders = () => ({
@@ -36,6 +38,20 @@ export const api = {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify({ published }),
+      }),
+
+    create: (post: CreatePostData) =>
+      fetch(`${API_BASE}/posts`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(post),
+      }),
+
+    update: (id: string, post: UpdatePostData) =>
+      fetch(`${API_BASE}/posts/${id}`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(post),
       }),
   },
 };
