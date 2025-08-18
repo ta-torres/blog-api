@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
-import { Eye, Globe, FileText, Calendar, Edit } from "lucide-react";
+import { Globe, FileText, Calendar, Edit } from "lucide-react";
 import type { Post } from "../types";
 
 interface PostItemProps {
@@ -82,18 +82,6 @@ const PostItem = ({ post, onTogglePublication }: PostItemProps) => {
 
       <div className="flex items-center justify-between border-t border-gray-100 pt-4">
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <Link to={`/dashboard/posts/${post.id}`}>
-              <Eye className="mr-1 h-4 w-4" />
-              View
-            </Link>
-          </Button>
-
           <Button
             variant="ghost"
             size="sm"
