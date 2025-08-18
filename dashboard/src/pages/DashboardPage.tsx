@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router";
 import Sidebar from "../components/Sidebar";
 import PostList from "../components/PostList";
+import PostEditor from "../components/PostEditor";
 
 const DashboardPage = () => {
   return (
@@ -34,32 +35,8 @@ const DashboardPage = () => {
                 </div>
               }
             />
-            <Route
-              path="new-post"
-              element={
-                <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
-                  <h2 className="mb-4 text-2xl font-bold text-gray-900">
-                    New Post
-                  </h2>
-                  <p className="text-gray-600">
-                    Post editor using react-md-editor
-                  </p>
-                </div>
-              }
-            />
-            <Route
-              path="edit-post/:id"
-              element={
-                <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
-                  <h2 className="mb-4 text-2xl font-bold text-gray-900">
-                    Edit Post
-                  </h2>
-                  <p className="text-gray-600">
-                    Post editor using react-md-editor (take current post data)
-                  </p>
-                </div>
-              }
-            />
+            <Route path="new-post" element={<PostEditor />} />
+            <Route path="edit-post/:id" element={<PostEditor />} />
           </Routes>
         </div>
       </main>
