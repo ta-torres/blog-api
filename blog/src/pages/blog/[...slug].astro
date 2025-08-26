@@ -1,11 +1,23 @@
 ---
 export const prerender = false;
 import { marked } from 'marked';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
 import BlogPost from '../../layouts/BlogPost.astro';
+
+const renderer = new marked.Renderer();
+
+renderer.code = ({ text, lang }) => {
+  const validLang = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
+  const highlighted = hljs.highlight(text, { language: validLang }).value;
+
+  return `<pre><code class="hljs language-${validLang}">${highlighted}</code></pre>`;
+};
 
 marked.setOptions({
   breaks: true,
   gfm: true,
+  renderer
 });
 
 const { slug } = Astro.params;
