@@ -9,11 +9,11 @@ const getAuthHeaders = () => ({
 
 export const api = {
   auth: {
-    login: (email: string, password: string) =>
+    login: (login: string, password: string) =>
       fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ login, password }),
       }),
 
     profile: () =>
