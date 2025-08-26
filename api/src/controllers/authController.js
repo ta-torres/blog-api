@@ -7,16 +7,26 @@ const prisma = new PrismaClient();
 // create jwt token on signup login, author as false
 const signup = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, username, displayName, password } = req.body;
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    // check if either one of email or username is already in use
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { username }],
+      },
     });
 
     if (existingUser) {
-      return res.status(400).json({
-        error: "User with this email already exists",
-      });
+      if (existingUser.email === email) {
+        return res.status(400).json({
+          error: "User with this email already exists",
+        });
+      }
+      if (existingUser.username === username) {
+        return res.status(400).json({
+          error: "Username already taken",
+        });
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -24,6 +34,8 @@ const signup = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         email,
+        username,
+        displayName: displayName || null,
         password: hashedPassword,
         isAuthor: false,
       },
@@ -33,6 +45,7 @@ const signup = async (req, res) => {
       {
         userId: user.id,
         email: user.email,
+        username: user.username,
         isAuthor: user.isAuthor,
       },
       process.env.JWT_SECRET,
@@ -45,6 +58,8 @@ const signup = async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
+        username: user.username,
+        displayName: user.displayName,
         isAuthor: user.isAuthor,
       },
     });
@@ -70,18 +85,21 @@ const login = (req, res, next) => {
       {
         userId: user.id,
         email: user.email,
+        username: user.username,
         isAuthor: user.isAuthor,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" },
     );
-
+    //console.log(user);
     res.json({
       message: "Login successful",
       token,
       user: {
         id: user.id,
         email: user.email,
+        username: user.username,
+        displayName: user.displayName,
         isAuthor: user.isAuthor,
       },
     });
@@ -93,6 +111,8 @@ const getProfile = async (req, res) => {
     user: {
       id: req.user.id,
       email: req.user.email,
+      username: req.user.username,
+      displayName: req.user.displayName,
       isAuthor: req.user.isAuthor,
       createdAt: req.user.createdAt,
     },

@@ -14,14 +14,17 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String @unique
-  password String
-  isAuthor Boolean @default(false)
-  posts    Post[]
-  comments Comment[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String @id @default(cuid())
+  email       String @unique
+  // defaul value for already created users
+  username    String @unique @default(cuid())
+  displayName String @unique @default("")
+  password    String
+  isAuthor    Boolean @default(false)
+  posts       Post[]
+  comments    Comment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Post {

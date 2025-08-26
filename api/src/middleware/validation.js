@@ -12,10 +12,18 @@ export const handleValidationErrors = (req, res, next) => {
 };
 
 export const validateSignup = [
-  body("email")
-    .isEmail()
-    .normalizeEmail()
-    .withMessage("Please provide a valid email"),
+  body("email").isEmail().withMessage("Please provide a valid email"),
+  body("username")
+    .isLength({ min: 3, max: 30 })
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage(
+      "Username must be 3-30 characters and contain only letters, numbers, and underscores",
+    ),
+  body("displayName")
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage("Display name must be between 1 and 50 characters"),
   body("password")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
@@ -23,10 +31,7 @@ export const validateSignup = [
 ];
 
 export const validateLogin = [
-  body("email")
-    .isEmail()
-    .normalizeEmail()
-    .withMessage("Please provide a valid email"),
+  body("login").trim().notEmpty().withMessage("Email or username is required"),
   body("password").notEmpty().withMessage("Password is required"),
   handleValidationErrors,
 ];

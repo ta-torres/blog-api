@@ -8,11 +8,13 @@ const prisma = new PrismaClient();
 
 passport.use(
   new LocalStrategy(
-    { usernameField: "email" },
-    async (email, password, done) => {
+    { usernameField: "login" },
+    async (login, password, done) => {
       try {
-        const user = await prisma.user.findUnique({
-          where: { email },
+        const user = await prisma.user.findFirst({
+          where: {
+            OR: [{ email: login }, { username: login }],
+          },
         });
 
         if (!user) {
