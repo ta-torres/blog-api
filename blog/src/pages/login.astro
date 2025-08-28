@@ -1,0 +1,54 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { AuthProvider } from '../components/AuthProvider';
+import { LoginForm } from '../components/LoginForm';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`Login | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <div class="auth-container">
+       
+          <LoginForm client:load />
+        
+        <p class="auth-switch">
+          Don't have an account? <a href="/signup">Sign up here</a>
+        </p>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-switch {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .auth-switch a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .auth-switch a:hover {
+    text-decoration: underline;
+  }
+</style>
