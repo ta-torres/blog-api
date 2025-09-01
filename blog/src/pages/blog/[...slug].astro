@@ -11,7 +11,7 @@ renderer.code = ({ text, lang }) => {
   const validLang = lang && hljs.getLanguage(lang) ? lang : "plaintext";
   const highlighted = hljs.highlight(text, { language: validLang }).value;
 
-  return `<pre><code class="hljs language-${validLang}">${highlighted}</code></pre>`;
+  return `<pre style="padding: 0"><code style="padding: 0" class="hljs language-${validLang}">${highlighted}</code></pre>`;
 };
 
 marked.setOptions({

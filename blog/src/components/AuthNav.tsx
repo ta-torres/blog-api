@@ -4,7 +4,7 @@ export const AuthNav: React.FC = () => {
   const { user, logout, loading } = useAuthContext();
 
   if (loading) {
-    return <div></div>;
+    return <div className="auth-nav" />;
   }
 
   if (user) {
