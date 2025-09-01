@@ -12,16 +12,17 @@ async function fetchPosts() {
     if (!response.ok) {
       throw new Error("Failed to fetch posts");
     }
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching posts:", error);
     return [];
   }
 }
 
-const dbPosts = await fetchPosts();
+const pageData = await fetchPosts();
 
-const posts = dbPosts
+const posts = pageData.posts
   .map((post) => ({
     id: post.id,
     data: {
