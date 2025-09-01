@@ -2,18 +2,46 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// /api/posts
+// /api/posts?page=1&limit=10
 const getPublishedPosts = async (req, res) => {
   try {
-    const posts = await prisma.post.findMany({
-      where: { published: true },
-      include: {
-        author: { select: { id: true, email: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    res.json(posts);
+    /* 
+      [posts findMany, totalCount count]
+      don't skip any if on page 1
+      take limit and calculate total
+    */
+    const [posts, totalCount] = await Promise.all([
+      prisma.post.findMany({
+        where: { published: true },
+        include: {
+          author: { select: { id: true, email: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.post.count({
+        where: { published: true },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.json({
+      posts,
+      pagination: {
+        currentPage: page,
+        totalPages,
+
+        totalCount,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch posts" });
   }
