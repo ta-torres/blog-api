@@ -18,7 +18,7 @@ const getPublishedPosts = async (req, res) => {
       prisma.post.findMany({
         where: { published: true },
         include: {
-          author: { select: { id: true, email: true } },
+          author: { select: { id: true, displayName: true } },
         },
         orderBy: { createdAt: "desc" },
         skip,
@@ -53,7 +53,7 @@ const getAllPosts = async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
       include: {
-        author: { select: { id: true, email: true } },
+        author: { select: { id: true, displayName: true } },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -73,7 +73,7 @@ const getPost = async (req, res) => {
     const post = await prisma.post.findUnique({
       where: { id },
       include: {
-        author: { select: { id: true, email: true } },
+        author: { select: { id: true, displayName: true } },
       },
     });
 
@@ -115,7 +115,7 @@ const createPost = async (req, res) => {
         authorId: req.user.id,
       },
       include: {
-        author: { select: { id: true, email: true } },
+        author: { select: { id: true, displayName: true } },
       },
     });
 
@@ -148,7 +148,7 @@ const togglePublishStatus = async (req, res) => {
       where: { id },
       data: { published: !existingPost.published },
       include: {
-        author: { select: { id: true, email: true } },
+        author: { select: { id: true, displayName: true } },
       },
     });
 
@@ -190,7 +190,7 @@ const updatePost = async (req, res) => {
       where: { id },
       data: updateData,
       include: {
-        author: { select: { id: true, email: true } },
+        author: { select: { id: true, displayName: true } },
       },
     });
 
