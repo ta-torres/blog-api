@@ -14,38 +14,47 @@ datasource db {
 }
 
 model User {
-  id          String @id @default(cuid())
-  email       String @unique
+  id          String    @id @default(cuid())
+  email       String    @unique
   // defaul value for already created users
-  username    String @unique @default(cuid())
-  displayName String @unique @default("")
+  username    String    @unique @default(cuid())
+  displayName String    @unique @default("")
   password    String
-  isAuthor    Boolean @default(false)
+  isAuthor    Boolean   @default(false)
   posts       Post[]
   comments    Comment[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Post {
-  id        String @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
   content   String
-  published Boolean @default(false)
-  authorId  String
-  author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  excerpt   String?
+  slug      String    @unique @default(cuid())
+  postImage String?
+  published Boolean   @default(false)
   comments  Comment[]
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  //todo
+  // tags        Tag[]     @relation("PostTags")
+  // categoryId  String?
+  // category    Category? @relation(fields: [categoryId], references: [id])
 }
 
 model Comment {
-  id        String @id @default(cuid())
+  id        String   @id @default(cuid())
   content   String
   authorId  String
   postId    String
-  author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  post      Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
