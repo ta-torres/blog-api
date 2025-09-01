@@ -91,15 +91,26 @@ const getPost = async (req, res) => {
   }
 };
 
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 // /api/posts
 const createPost = async (req, res) => {
   try {
-    const { title, content, published = false } = req.body;
+    const { title, content, published = false, excerpt, postImage } = req.body;
+    const slug = generateSlug(title);
 
     const post = await prisma.post.create({
       data: {
         title,
         content,
+        excerpt,
+        postImage,
+        slug,
         published,
         authorId: req.user.id,
       },
