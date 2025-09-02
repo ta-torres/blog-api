@@ -25,6 +25,7 @@ const pageData = await fetchPosts();
 const posts = pageData.posts
   .map((post) => ({
     id: post.id,
+    slug: post.slug,
     data: {
       title: post.title,
       pubDate: new Date(post.createdAt),
@@ -118,7 +119,7 @@ const posts = pageData.posts
           {
             posts.map((post) => (
               <li>
-                <a href={`/blog/${post.id}/`}>
+                <a href={`/blog/${post.slug}/`}>
                   {post.data.heroImage && (
                     <Image
                       width={720}

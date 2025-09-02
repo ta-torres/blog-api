@@ -22,14 +22,14 @@ marked.setOptions({
 
 const { slug } = Astro.params;
 
-async function fetchPost(postId) {
+async function fetchPost(slug) {
   try {
     const response = await fetch(
-      `${import.meta.env.PUBLIC_API_URL}api/posts/${postId}`,
+      `${import.meta.env.PUBLIC_API_URL}api/posts/post/${slug}`,
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch posts");
+      throw new Error("Failed to fetch post");
     }
 
     return await response.json();
@@ -50,8 +50,8 @@ const htmlContent = marked.parse(post.content);
 const postData = {
   title: post.title,
   pubDate: new Date(post.createdAt),
-  heroImage: post.heroImage || null,
-  description: post.description || "",
+  heroImage: post.postImage || null,
+  description: post.excerpt || "",
   author: post.author,
 };
 ---

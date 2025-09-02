@@ -21,6 +21,7 @@ router.get(
 );
 router.get("/", postController.getPublishedPosts);
 router.get("/:id", optionalAuth, postController.getPost);
+router.get("/post/:slug", optionalAuth, postController.getPostBySlug);
 router.put(
   "/:id",
   validateUpdatePost,

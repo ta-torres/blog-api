@@ -91,6 +91,31 @@ const getPost = async (req, res) => {
   }
 };
 
+const getPostBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      include: {
+        author: { select: { id: true, displayName: true } },
+      },
+    });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (!post.published && (!req.user || !req.user.isAuthor)) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch post" });
+  }
+};
+
 function generateSlug(title) {
   return title
     .toLowerCase()
@@ -232,6 +257,7 @@ const postController = {
   getPublishedPosts,
   getAllPosts,
   getPost,
+  getPostBySlug,
   createPost,
   updatePost,
   togglePublishStatus,
