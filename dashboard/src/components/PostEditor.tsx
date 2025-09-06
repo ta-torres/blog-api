@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Save, Eye } from "lucide-react";
 import type { CreatePostData, UpdatePostData } from "../types";
+// @ts-expect-error not typed yet
+import UploadWidget from "./UploadWidget";
 
 const PostEditor = () => {
   const { id } = useParams<{ id: string }>();
@@ -139,6 +141,7 @@ const PostEditor = () => {
       )}
 
       <div className="rounded-lg border border-gray-200 bg-white p-8">
+        <UploadWidget />
         <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
