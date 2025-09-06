@@ -6,6 +6,8 @@ import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
 
+let posts = []
+
 async function fetchPosts() {
   try {
     const response = await fetch(`${import.meta.env.PUBLIC_API_URL}api/posts`);
@@ -22,7 +24,8 @@ async function fetchPosts() {
 
 const pageData = await fetchPosts();
 
-const posts = pageData.posts
+if (pageData.posts) {
+  posts = pageData.posts
   .map((post) => ({
     id: post.id,
     slug: post.slug,
@@ -35,6 +38,7 @@ const posts = pageData.posts
     },
   }))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+}
 ---
 
 <!doctype html>
@@ -115,30 +119,37 @@ const posts = pageData.posts
     <Header />
     <main>
       <section>
-        <ul>
-          {
-            posts.map((post) => (
-              <li>
-                <a href={`/blog/${post.slug}/`}>
-                  {post.data.heroImage && (
-                    <Image
-                      width={720}
-                      height={360}
-                      src={post.data.heroImage}
-                      alt=""
-                    />
-                  )}
-                  <h4 class="title">{post.data.title}</h4>
-                  <p class="date">
-                    <FormattedDate date={post.data.pubDate} />
-                  </p>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        {
+          posts.length === 0 ? (
+            <p style="text-align: center">No posts published yet.</p>
+          ) : (
+            <ul>
+              {
+                posts.map((post) => (
+                  <li>
+                    <a href={`/blog/${post.slug}/`}>
+                      {post.data.heroImage && (
+                        <Image
+                          width={720}
+                          height={360}
+                          src={post.data.heroImage}
+                          alt=""
+                        />
+                      )}
+                      <h4 class="title">{post.data.title}</h4>
+                      <p class="date">
+                        <FormattedDate date={post.data.pubDate} />
+                      </p>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          )
+        }
       </section>
     </main>
     <Footer />
   </body>
 </html>
+
