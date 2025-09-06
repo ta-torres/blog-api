@@ -1,62 +1,48 @@
 ---
+export const prerender = false;
 import { Image } from "astro:assets";
-import BaseHead from "../../components/BaseHead.astro";
-import Footer from "../../components/Footer.astro";
-import FormattedDate from "../../components/FormattedDate.astro";
-import Header from "../../components/Header.astro";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+import BaseHead from "./src/components/BaseHead.astro";
+import Footer from "./src/components/Footer.astro";
+import FormattedDate from "./src/components/FormattedDate.astro";
+import Header from "./src/components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "./src/consts";
 
-let posts = []
+const { page } = Astro.params;
+const currentPage = Number(page) || 1;
 
 async function fetchPosts(page = 1, limit = 10) {
   try {
     const response = await fetch(`${import.meta.env.PUBLIC_API_URL}api/posts?page=${page}&limit=${limit}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch posts");
-    }
-    const data = await response.json();
-    return data;
+    if (!response.ok) throw new Error("Failed to fetch posts");
+    return await response.json();
   } catch (error) {
     console.error("Error fetching posts:", error);
-    return [];
+    return { posts: [], pagination: {} };
   }
 }
 
-async function getBlogPage(page = 1, limit = 10) {
-  const pageData = await fetchPosts(page, limit);
-  return {
-    posts: pageData.posts && pageData.posts.map((post) => ({
-      id: post.id,
-      slug: post.slug,
-      data: {
-        title: post.title,
-        pubDate: new Date(post.createdAt),
-        heroImage: post.heroImage || null,
-        description: post.description || "",
-        author: post.author,
-      }
-    })).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
-    pagination: pageData.pagination,
-  };
-}
-//getBlogPage().then((data) => console.log(data));
+const pageData = await fetchPosts(currentPage, 10);
 
-const pageData = await getBlogPage();
+const posts = pageData.posts.map((post) => ({
+  id: post.id,
+  slug: post.slug,
+  data: {
+    title: post.title,
+    pubDate: new Date(post.createdAt),
+    heroImage: post.heroImage || null,
+    description: post.description || "",
+    author: post.author,
+  }
+})).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-if (pageData.posts) {
-  posts = pageData.posts
-}
-const currentPage = pageData.pagination?.currentPage
-const nextUrl = pageData.pagination?.hasNext ? `/blog/page/${currentPage + 1}` : null
-console.log(nextUrl);
-const prevUrl = pageData.pagination?.hasPrev ? (currentPage === 2 ? `/blog/` : `/blog/page/${currentPage - 1}`) : null
-console.log(prevUrl);
+const nextUrl = pageData.pagination?.hasNext ? `/blog/page/${currentPage + 1}` : null;
+const prevUrl = pageData.pagination?.hasPrev ? (currentPage === 2 ? `/blog/` : `/blog/page/${currentPage - 1}`) : null;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title={`Blog - Page ${currentPage}`} description={SITE_DESCRIPTION} />
     <style>
       main {
         width: 960px;
@@ -156,14 +142,16 @@ console.log(prevUrl);
                   </li>
                 ))
               }
-              {nextUrl !== null && <a href={nextUrl}>Next Page</a>}
-              {prevUrl !== null && <a href={prevUrl}>Previous Page</a>}
             </ul>
           )
         }
+
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+          {prevUrl && <a href={prevUrl}>← Previous</a>}
+          {nextUrl && <a href={nextUrl}>Next →</a>}
+        </div>
       </section>
     </main>
     <Footer />
   </body>
 </html>
-
