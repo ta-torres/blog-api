@@ -13,4 +13,11 @@ router.post(
   uploadController.uploadImage,
 );
 
+router.delete(
+  "/",
+  authenticateToken,
+  requireAuthor,
+  uploadController.deleteContent,
+);
+
 export default router;
