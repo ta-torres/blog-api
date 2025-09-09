@@ -9,6 +9,13 @@ import { ArrowLeft, Save, Eye } from "lucide-react";
 import type { CreatePostData, UpdatePostData } from "../types";
 // @ts-expect-error not typed yet
 import UploadWidget from "./UploadWidget";
+import ImageCarousel from "./ImageCarousel";
+
+interface ImageData {
+  public_id: string;
+  secure_url: string;
+  original_filename: string;
+}
 
 const PostEditor = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +24,7 @@ const PostEditor = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [images, setImages] = useState<ImageData[]>([]);
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +53,37 @@ const PostEditor = () => {
       console.error("Fetch post error:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageUpload = (imageData: ImageData) => {
+    setImages((prev) => [...prev, imageData]);
+  };
+
+  const handleImageDelete = async (publicId: string) => {
+    //pass token and filter out state from image with publicId
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}api/upload/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ public_id: publicId }),
+        },
+      );
+
+      if (response.ok) {
+        setImages((prev) => prev.filter((img) => img.public_id !== publicId));
+      } else {
+        throw new Error("Failed to delete image");
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      setError("Failed to delete image");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -141,7 +180,13 @@ const PostEditor = () => {
       )}
 
       <div className="rounded-lg border border-gray-200 bg-white p-8">
-        <UploadWidget />
+        <div>
+          <div className="mb-2 flex items-center gap-4">
+            <h3 className="text-lg font-medium text-gray-900">Images</h3>
+            <UploadWidget onUploadSuccess={handleImageUpload} />
+          </div>
+          <ImageCarousel images={images} onDeleteImage={handleImageDelete} />
+        </div>
         <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>

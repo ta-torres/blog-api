@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 
-const UploadWidget = () => {
+const UploadWidget = ({ onUploadSuccess }) => {
   const cloudinaryRef = useRef(null);
   const widgetRef = useRef(null);
+
   useEffect(() => {
     cloudinaryRef.current = window.cloudinary;
     console.log(cloudinaryRef.current);
@@ -14,10 +15,16 @@ const UploadWidget = () => {
       (error, result) => {
         if (result.event === "success") {
           console.log("Image uploaded", result.info);
+          onUploadSuccess({
+            public_id: result.info.public_id,
+            secure_url: result.info.secure_url,
+            original_filename: result.info.original_filename || "Untitled",
+          });
         }
       },
     );
-  }, []);
+  }, [onUploadSuccess]);
+
   return (
     <button
       id="upload-widget"
