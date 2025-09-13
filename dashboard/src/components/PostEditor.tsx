@@ -29,6 +29,7 @@ const PostEditor = () => {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -90,6 +91,7 @@ const PostEditor = () => {
 
       if (response.ok) {
         setImages((prev) => prev.filter((img) => img.public_id !== publicId));
+        handleSave();
       } else {
         throw new Error("Failed to delete image");
       }
@@ -129,7 +131,8 @@ const PostEditor = () => {
 
       if (response.ok) {
         //const data = await response.json();
-        navigate(`/dashboard/posts/`);
+        if (publish) navigate("/dashboard/posts");
+        setMessage("Draft saved successfully");
       } else {
         setError("Failed to save post");
         console.error("Save post error:", response);
@@ -197,6 +200,12 @@ const PostEditor = () => {
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           {error}
+        </div>
+      )}
+
+      {message && (
+        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-green-700">
+          {message}
         </div>
       )}
 
