@@ -23,6 +23,7 @@ const PostEditor = () => {
   const isEditMode = Boolean(id);
 
   const [title, setTitle] = useState("");
+  const [postImage, setPostImage] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<ImageData[]>([]);
   const [loading, setLoading] = useState(isEditMode);
@@ -44,6 +45,18 @@ const PostEditor = () => {
         const data = await response.json();
         setTitle(data.title);
         setContent(data.content);
+        setPostImage(data.postImage || "");
+
+        // store this as json later
+        if (data.images && data.images.length > 0) {
+          const imageData = data.images.map((publicId: string) => ({
+            public_id: publicId,
+            secure_url: `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`,
+            original_filename: "default name",
+          }));
+          setImages(imageData);
+        }
+
         setError(null);
       } else {
         setError("Failed to load post");
@@ -100,6 +113,8 @@ const PostEditor = () => {
       const postData = {
         title: title.trim(),
         content: content || "",
+        postImage: postImage.trim() || undefined,
+        images: images.map((img) => img.public_id),
         published: publish,
       };
 
@@ -112,6 +127,7 @@ const PostEditor = () => {
         navigate(`/dashboard/posts/`);
       } else {
         setError("Failed to save post");
+        console.error("Save post error:", response);
       }
     } catch (err) {
       setError("Error saving post");
@@ -180,13 +196,6 @@ const PostEditor = () => {
       )}
 
       <div className="rounded-lg border border-gray-200 bg-white p-8">
-        <div>
-          <div className="mb-2 flex items-center gap-4">
-            <h3 className="text-lg font-medium text-gray-900">Images</h3>
-            <UploadWidget onUploadSuccess={handleImageUpload} />
-          </div>
-          <ImageCarousel images={images} onDeleteImage={handleImageDelete} />
-        </div>
         <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
@@ -198,6 +207,25 @@ const PostEditor = () => {
               onChange={(e) => setTitle(e.target.value)}
               className="text-xl font-semibold"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="postImage">Main Post Image URL</Label>
+            <Input
+              id="postImage"
+              type="text"
+              placeholder="Enter main image URL..."
+              value={postImage}
+              onChange={(e) => setPostImage(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 flex items-center gap-4">
+              <h3 className="text-lg font-medium text-gray-900">Images</h3>
+              <UploadWidget onUploadSuccess={handleImageUpload} />
+            </div>
+            <ImageCarousel images={images} onDeleteImage={handleImageDelete} />
           </div>
 
           <div className="space-y-2">

@@ -126,7 +126,14 @@ function generateSlug(title) {
 // /api/posts
 const createPost = async (req, res) => {
   try {
-    const { title, content, published = false, excerpt, postImage } = req.body;
+    const {
+      title,
+      content,
+      published = false,
+      excerpt,
+      postImage,
+      images = [],
+    } = req.body;
     const slug = generateSlug(title);
 
     const post = await prisma.post.create({
@@ -137,6 +144,7 @@ const createPost = async (req, res) => {
         postImage,
         slug,
         published,
+        images,
         authorId: req.user.id,
       },
       include: {
@@ -190,7 +198,7 @@ const togglePublishStatus = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, published } = req.body;
+    const { title, content, published, postImage, images } = req.body;
 
     const existingPost = await prisma.post.findUnique({
       where: { id },
@@ -210,6 +218,8 @@ const updatePost = async (req, res) => {
     if (title !== undefined) updateData.title = title;
     if (content !== undefined) updateData.content = content;
     if (published !== undefined) updateData.published = published;
+    if (postImage !== undefined) updateData.postImage = postImage;
+    if (images !== undefined) updateData.images = images;
 
     const updatedPost = await prisma.post.update({
       where: { id },
@@ -256,7 +266,6 @@ const postController = {
   getPost,
   getPublishedPosts,
   getAllPosts,
-  getPost,
   getPostBySlug,
   createPost,
   updatePost,

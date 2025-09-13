@@ -8,6 +8,8 @@ export interface Post {
   id: string;
   title: string;
   content: string;
+  postImage?: string;
+  images: string[];
   published: boolean;
   createdAt: string;
   updatedAt: string;
@@ -20,11 +22,15 @@ export interface Post {
 export interface CreatePostData {
   title: string;
   content: string;
+  postImage?: string;
+  images?: string[];
   published?: boolean;
 }
 
 export interface UpdatePostData {
   title?: string;
   content?: string;
+  postImage?: string;
+  images?: string[];
   published?: boolean;
 }

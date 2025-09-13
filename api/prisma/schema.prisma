@@ -35,6 +35,7 @@ model Post {
   slug      String    @unique @default(cuid())
   postImage String?
   published Boolean   @default(false)
+  images    String[]  // cloudinary public_id
   comments  Comment[]
 
   authorId String
