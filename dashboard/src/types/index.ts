@@ -23,7 +23,7 @@ export interface CreatePostData {
   title: string;
   content: string;
   postImage?: string;
-  images?: string[];
+  images?: object[];
   published?: boolean;
 }
 
@@ -31,6 +31,6 @@ export interface UpdatePostData {
   title?: string;
   content?: string;
   postImage?: string;
-  images?: string[];
+  images?: object[];
   published?: boolean;
 }

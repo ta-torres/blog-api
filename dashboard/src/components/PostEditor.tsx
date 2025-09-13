@@ -49,7 +49,7 @@ const PostEditor = () => {
         setPostImage(data.postImage || "");
 
         if (data.images && data.images.length > 0) {
-          const imageData = data.images.map((imgObj: any) => ({
+          const imageData = data.images.map((imgObj: ImageData) => ({
             // stored as json[] in Post model
             public_id: imgObj.public_id,
             secure_url: imgObj.secure_url,
