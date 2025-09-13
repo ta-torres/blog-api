@@ -64,7 +64,7 @@ const PostEditor = () => {
     //pass token and filter out state from image with publicId
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}api/upload/`,
+        `${import.meta.env.VITE_API_BASE_URL}/upload`,
         {
           method: "DELETE",
           headers: {

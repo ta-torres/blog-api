@@ -12,7 +12,7 @@ const currentPage = Number(page) || 1;
 
 async function fetchPosts(page = 1, limit = 10) {
   try {
-    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}api/posts?page=${page}&limit=${limit}`);
+    const response = await fetch(`${import.meta.env.PUBLIC_API_URL}/posts?page=${page}&limit=${limit}`);
     if (!response.ok) throw new Error("Failed to fetch posts");
     return await response.json();
   } catch (error) {
