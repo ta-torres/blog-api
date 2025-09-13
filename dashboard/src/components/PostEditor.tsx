@@ -47,12 +47,12 @@ const PostEditor = () => {
         setContent(data.content);
         setPostImage(data.postImage || "");
 
-        // store this as json later
         if (data.images && data.images.length > 0) {
-          const imageData = data.images.map((publicId: string) => ({
-            public_id: publicId,
-            secure_url: `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}`,
-            original_filename: "default name",
+          const imageData = data.images.map((imgObj: any) => ({
+            // stored as json[] in Post model
+            public_id: imgObj.public_id,
+            secure_url: imgObj.secure_url,
+            original_filename: imgObj.original_filename || "default name",
           }));
           setImages(imageData);
         }
@@ -114,7 +114,12 @@ const PostEditor = () => {
         title: title.trim(),
         content: content || "",
         postImage: postImage.trim() || undefined,
-        images: images.map((img) => img.public_id),
+        images: images.map((img) => ({
+          // stored as json[] in Post model
+          public_id: img.public_id,
+          secure_url: img.secure_url,
+          original_filename: img.original_filename,
+        })),
         published: publish,
       };
 
