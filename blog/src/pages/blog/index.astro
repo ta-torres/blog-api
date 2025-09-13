@@ -31,7 +31,7 @@ async function getBlogPage(page = 1, limit = 10) {
       data: {
         title: post.title,
         pubDate: new Date(post.createdAt),
-        heroImage: post.heroImage || null,
+        heroImage: post.postImage || null,
         description: post.description || "",
         author: post.author,
       }
@@ -45,6 +45,7 @@ const pageData = await getBlogPage();
 
 if (pageData.posts) {
   posts = pageData.posts
+  //console.log(posts)
 }
 const currentPage = pageData.pagination?.currentPage
 const nextUrl = pageData.pagination?.hasNext ? `/blog/page/${currentPage + 1}` : null
